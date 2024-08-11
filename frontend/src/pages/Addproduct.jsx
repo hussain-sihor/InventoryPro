@@ -11,7 +11,7 @@ const Addproduct = () => {
 	const [categories,setCategories] = useState([]);
 
 	useEffect(()=>{
-    axios.get("http://localhost:5000/api/category/getcategories").then((response) => {
+    axios.get("http://localhost:5000/api/categories/getcategories").then((response) => {
 		setCategories(response.data)
 		// console.log(response.data)
  });
@@ -94,7 +94,7 @@ const Addproduct = () => {
 					level:"",
 					author:empName,})
 
-					navigate("/dashboard")
+					navigate("/products")
 			}
 		});
 	};

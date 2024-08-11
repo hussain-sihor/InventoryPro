@@ -13,14 +13,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useNavigate } from "react-router-dom";
  
+import { CiCirclePlus } from "react-icons/ci";
 
 
 
 
 
 const Orders = () => {
-	
+	const navigate = useNavigate();
  let count=1;
 
  const [Orders,setOrders] = useState([]);
@@ -29,11 +31,12 @@ const Orders = () => {
 
 //  type Checked = DropdownMenuCheckboxItemProps["checked"];
  
-  // const [showHigh, setShowHigh] = React.useState(false)
-  // const [defaultt, setDefaultt] = React.useState(false)
-  // const [showLow, setShowLow] = React.useState(false)
-  // const [showMidium, setShowMidium] = React.useState(false)
-  // const [showOut, setShowOut] = React.useState(false)
+  const [showpending, setShowpending] = React.useState(false)
+  const [defaultt, setDefaultt] = React.useState(false)
+  const [showcompleted, setShowcompleted] = React.useState(false)
+  const [showrejected, setShowrejected] = React.useState(false)
+  // const [checkStatusChange, setCheckStatusChange] = React.useState("")
+  
 
  
 
@@ -41,14 +44,35 @@ const Orders = () => {
     axios.get("http://localhost:5000/api/orders/getorders").then((response) => {
 		setOrders(response.data);
     setNumber(response.data.length)
-    console.log(response.data)
+    // console.log(response.data)
  });
 
  },[])
 
 
+ const CheckStatusChange = (data) => {
+  if (data == "default") {
+    // console.log("hureggg");
+    axios
+      .get("http://localhost:5000/api/orders/getorders")
+      .then((response) => {
+        setOrders(response.data);
+      });
+  } else {
+    axios
+      .post("http://localhost:5000/api/orders/getstatusorders", {
+        status: data,
+      })
+      .then((response) => {
+        setOrders(response.data);
+      });
+  }
+};
+
+
+
 	return (
-		<div className="w-full h-[93vh]">
+		<div className="w-full h-[91.7vh]">
 		   
        {/* NavBar  */}
 			<div className="flex justify-start w-full h-[25%] flex-col items-center pl-8 pr-8 pt-4 pb-4 bg-black gap-10">
@@ -65,11 +89,8 @@ const Orders = () => {
 				</div>
        
 			 {/* Profile */}
-			 <div className="flex justify-center items-center bg-white rounded-full w-10 h-10 cursor-pointer" onClick={()=>{}}>
-			 <TbAlienFilled className="text-5xl"/>
-
-				
-			 </div>
+			 <button className="flex justify-center items-center text-green-400 text-xl font-semibold rounded-md border-[1px] border-dashed border-white pl-2 pr-2 pt-1 pb-1 cursor-pointer" type="button" onClick={()=>{navigate('/addorder')}}>Add Orders</button>
+			
 
 				</div>
 
@@ -80,7 +101,7 @@ const Orders = () => {
          
 	
 
-			{/* <DropdownMenu>
+			 <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button className="text-white bg-black border-[1px] border-dashed pl-3 pr-3 pt-1 pb-1 flex gap-2 rounded-md">
 				<CiCirclePlus className="text-white text-lg font-bold"/>
@@ -95,11 +116,10 @@ const Orders = () => {
         
          checked={defaultt}
           onCheckedChange={()=>{
-            checkProductChange("default")
-            setShowOut(false)
-            setShowMidium(false)
-            setShowHigh(false)
-            setShowLow(false)
+            CheckStatusChange("default")
+            setShowrejected(false)
+            setShowcompleted(false)
+            setShowpending(false)
           }
 
           }
@@ -109,103 +129,52 @@ const Orders = () => {
 
         <DropdownMenuCheckboxItem
         
-          checked={showOut}
+          checked={showpending}
           onCheckedChange={()=>{
-            checkProductChange("Out of Stock")
-            setShowOut(!showOut)
-            setShowMidium(false)
-            setShowHigh(false)
-            setShowLow(false)
+            CheckStatusChange("Pending")
+            setShowpending(!showpending)
+            setShowrejected(false)
+            setShowcompleted(false)
             
           }
 
           }
         >
-          Out Of Stock
+          Pending
         </DropdownMenuCheckboxItem>
 
         <DropdownMenuCheckboxItem
-          checked={showLow}
+          checked={showcompleted}
           onCheckedChange={()=>{
-            checkProductChange("Low")
-            setShowLow(!showLow)
-            setShowMidium(false)
-            setShowHigh(false)
-            setShowOut(false)
+            CheckStatusChange("Completed")
+            setShowcompleted(!showcompleted)
+            setShowrejected(false)
+            setShowpending(false)
             
           }
         }
         >
-          Low
+          Completed
         </DropdownMenuCheckboxItem>
 
         <DropdownMenuCheckboxItem
-          checked={showMidium}
+          checked={showrejected}
           onCheckedChange={()=>{
-            setShowMidium(!showMidium)
-            checkProductChange("Mid")
-            setShowOut(false)
-            setShowHigh(false)
-            setShowLow(false)
+            setShowrejected(!showrejected)
+            CheckStatusChange("Rejected")
+            setShowcompleted(false)
+            setShowpending(false)
           
           }}
         >
-          Midium
+          Rejected
         </DropdownMenuCheckboxItem>
 
-        <DropdownMenuCheckboxItem
-          checked={showHigh}
-          onCheckedChange={()=>{
-            checkProductChange("High")
-            setShowHigh(!showHigh)
-            setShowMidium(false)
-            setShowOut(false)
-            setShowLow(false)
-           
-          }}
-        >
-          High
-        </DropdownMenuCheckboxItem>
 
       </DropdownMenuContent>
 
       </DropdownMenu>
 
-
-
-			<DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="text-white bg-black border-[1px] border-dashed pl-3 pr-3 pt-1 pb-1 flex gap-2 rounded-md">
-				<CiCirclePlus className="text-white text-lg font-bold"/>
-					Categories</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-black text-white">
-        <DropdownMenuLabel>Options</DropdownMenuLabel>
-
-        <DropdownMenuSeparator />
-        
-        <DropdownMenuCheckboxItem
-        onCheckedChange={()=>{
-          checkProductChange("default")
-        }}
-      >
-        Clear
-      </DropdownMenuCheckboxItem>
-
-       {categories.map((item)=>(
-          <DropdownMenuCheckboxItem
-        
-          onCheckedChange={()=>{
-            checkCategoryChange(item.name)
-          }}
-        >
-          {item.name}
-        </DropdownMenuCheckboxItem>
-       ))}
-
-      </DropdownMenuContent>
-
-      </DropdownMenu> */}
 
 	
 

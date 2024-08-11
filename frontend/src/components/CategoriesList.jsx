@@ -7,7 +7,7 @@ const CategoriesList = () => {
   const [categories,setCategories] = useState([]);
  
   useEffect(()=>{
-    axios.get("http://localhost:5000/api/category/getcategories").then((response) => {
+    axios.get("http://localhost:5000/api/categories/getcategories").then((response) => {
 		setCategories(response.data);
  });
  },[])
@@ -24,7 +24,7 @@ const CategoriesList = () => {
  
 }
   return (
-    <div className=' flex flex-col justify-start items-starts h-full w-full border-[1px] border-white rounded-md  overflow-y-scroll'>
+    <div className=' flex flex-col justify-start items-starts h-[80%] w-full border-[1px] border-white rounded-md  overflow-y-scroll'>
       {categories.map((item)=>(
         <Category data ={item} onclick = {handleDelete}/>
       ))}

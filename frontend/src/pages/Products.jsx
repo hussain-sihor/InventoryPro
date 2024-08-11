@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Product from "../components/Product";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { TbAlienFilled } from "react-icons/tb";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +18,7 @@ import { CiCirclePlus } from "react-icons/ci";
 // getCategoryProducts
 
 const Products = () => {
+	const navigate = useNavigate();
 	let count = 1;
 
 	const [products, setProducts] = useState([]);
@@ -77,7 +77,7 @@ const Products = () => {
 	}, []);
 
 	return (
-		<div className="w-full h-[93vh]">
+		<div className="w-full h-[91.7vh]">
 			{/* NavBar  */}
 			<div className="flex justify-start w-full h-[25%] flex-col items-center pl-8 pr-8 pt-4 pb-4 bg-black gap-10">
 				{/* 1st row */}
@@ -92,13 +92,8 @@ const Products = () => {
 						</div>
 					</div>
 
-					{/* Profile */}
-					<div
-						className="flex justify-center items-center bg-white rounded-full w-10 h-10 cursor-pointer"
-						onClick={() => {}}
-					>
-						<TbAlienFilled className="text-5xl" />
-					</div>
+					{/* Button */}
+					<button className="flex justify-center items-center text-green-400 text-xl font-semibold rounded-md border-[1px] border-dashed border-white pl-2 pr-2 pt-1 pb-1 cursor-pointer" type="button" onClick={()=>{navigate('/addproduct')}}>Add Products</button>
 				</div>
 
 				{/* 2nd row  */}

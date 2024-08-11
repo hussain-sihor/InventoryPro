@@ -42,6 +42,8 @@ const OrderReview = () => {
 	const { id } = useParams();
 	const [available, setAvailable] = useState([]);
 	const [allAvailable, setAllAvailable] = useState(true);
+	// const [subtotal, setSubTotal] = useState(0);
+	const subTotal =0;
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -102,12 +104,8 @@ const OrderReview = () => {
 	const changeStatus = async () =>{
     //change order status from recieved to packing
 		//change quantities of products
-
-
-
-		console.log("JS")
 		
-		const temp = {...data,status:"packing"}
+		const temp = {...data,status:"Completed"}
 		const productResponse = await axios.put(`http://localhost:5000/api/orders/getorder/${id}`,temp);
  
    const temp2 = [...products];
@@ -125,7 +123,11 @@ const OrderReview = () => {
 		navigate(0)
 
 	}
-	
+	const cancelOrder = async()=>{
+		const temp = {...data,status:"Rejected"}
+		const productResponse = await axios.put(`http://localhost:5000/api/orders/getorder/${id}`,temp);
+		navigate(0);
+	}
 	const formatedDate1 = dateFormat(data.orderDate, "mmmm d, yyyy");
 	const formatedDate2 = dateFormat(data.orderDate, "h:mm tt");
 
@@ -165,12 +167,12 @@ const OrderReview = () => {
                 
 
 							
-								<div className="bg-white text-black pl-2 pr-2 pt-1 pb-1 border-dashed border-[1px] border-white rounded-md text-sm font-medium ">
+								<div className="bg-slate-300 text-black pl-2 pr-2 pt-1 pb-1 border-dashed border-[1px] border-white rounded-md text-sm font-medium ">
 									Order Recieved
 								</div> 	
 								
 
-								{data.status == "recieve" ? 
+								{data.status == "Pending" &&
 								<Dialog className="">
 									<DialogTrigger asChild>
 										<Button
@@ -280,7 +282,7 @@ const OrderReview = () => {
 											</div>
                       
 											<div className="flex w-[40%] h-full justify-center items-center pl-2 pr-2 pt-1 pb-1">
-												<h1 className="text-md font-normal text-slate-300">If all products available !!! <br />Click proceed to change the status from <br /><span className="font-semibold text-lg text-white">Recieved</span> to <span className="font-semibold text-lg text-white">Packing</span></h1>
+												<h1 className="text-md font-normal text-slate-300">If all products available !!! <br />Click proceed to change the status from <br /><span className="font-semibold text-lg text-white">Pending</span> to <span className="font-semibold text-lg text-white">Completed</span></h1>
 											</div>
 
 										</div>
@@ -289,15 +291,25 @@ const OrderReview = () => {
 										
 										?<Button type="submit" onClick={changeStatus} className="">Proceed</Button> 
 										
-										:<Button type="" className="cursor-default">Insufficient</Button>}
+										:<Button type="submit" onClick={cancelOrder} className="">Reject Order</Button>}
 											
 										</DialogFooter>
 									</DialogContent>
 
-								</Dialog> : 
-								<div className="bg-white text-black pl-2 pr-2 pt-1 pb-1 border-dashed border-[1px] border-white rounded-md text-sm font-medium ">
-									Order Packed
+								</Dialog>}
+
+								{data.status =="Rejected" && 
+								<div className="bg-slate-300 text-black pl-2 pr-2 pt-1 pb-1 border-dashed border-[1px] border-white rounded-md text-sm font-medium ">
+									Order Rejected
 								</div>}
+
+								{data.status =="Completed" && 
+								<div className="bg-slate-300 text-black pl-2 pr-2 pt-1 pb-1 border-dashed border-[1px] border-white rounded-md text-sm font-medium ">
+									Order Completed
+								</div>}
+
+							
+
 							</div>
 
 							<div className=" h-[80%] w-full overflow-y-scroll flex flex-col justify-start items-center ">
@@ -370,13 +382,13 @@ const OrderReview = () => {
 							<div className="flex gap-2 items-center">
 								<MdEmail className="text-lg" />
 								<h1 className="text-md font-normal">
-									sihorwalahussain@gmail.com
+									{data.customerEmail}
 								</h1>
 							</div>
 
 							<div className="flex gap-2 items-center">
 								<FaPhoneAlt className="text-lg" />
-								<h1 className="text-md font-normal">9361344201</h1>
+								<h1 className="text-md font-normal">{data.customerPhone}</h1>
 							</div>
 						</div>
 						{/* Shipp Addre  */}

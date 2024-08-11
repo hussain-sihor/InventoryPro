@@ -21,11 +21,10 @@ const Product = require("../model/product");
 const addOrder = asyncHandler(async (req, res) => {
 	const {orderNumber,customerId,customerName,customerPhone,customerEmail,paymentMethod,shippingAddress,billingAddress,shippingCost,items,discount,totalAmount} = req.body;
 
-	// if (!orderNumber || !customerId || !customerName || !paymentMethod || !shippingAddress || !billingAddress || !shippingCost || !items || !discount || !totalAmount) {
+	// if (!orderNumber || !customerId || !customerName || !customerPhone || !customerEmail || !paymentMethod || !shippingAddress || !billingAddress || !shippingCost || !items || !discount || !totalAmount) {
   //   res.status(400);
   //   throw new Error("All fields required");
 	// }
-
 
  	// Check Product Exsist
    const order = await Order.findOne({ orderNumber });
@@ -79,5 +78,16 @@ const updateOrder = asyncHandler(async (req,res)=>{
 	res.status(200).json(order)
 })
 
+getStatusOrders = asyncHandler(async(req,res)=>{
+	const {status} = req.body;
 
-module.exports = {addOrder,getOrders,getOrder,updateOrder};
+	if (!status) {
+    res.status(400);
+    throw new Error("All fields required");
+	}
+
+	const allOrders = await Order.find({status:status});
+	res.status(200).json(allOrders)
+})
+
+module.exports = {addOrder,getOrders,getOrder,updateOrder,getStatusOrders};

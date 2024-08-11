@@ -47,7 +47,10 @@ const Order = ({ data }) => {
 
 			{/* Status  */}
 			<div className="grid col-span-1   justify-center items-center  w-full h-full ">
-				<h1 className="text-md font-medium text-white">{data.status}</h1>
+				
+				{data.status == "Rejected" && <h1 className="text-md font-medium text-red-400">{data.status}</h1>}
+				{data.status == "Completed" && <h1 className="text-md font-medium text-green-400">{data.status}</h1>}
+				{data.status == "Pending" && <h1 className="text-md font-medium text-white">{data.status}</h1>}
 			</div>
 
 			{/* totalAmount  */}
